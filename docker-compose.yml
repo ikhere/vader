@@ -1,0 +1,35 @@
+version: '2'
+services:
+  db:
+    image: postgres
+  rabbitmq:
+    image: rabbitmq
+  redis:
+    image: redis
+  web:
+    build: .
+    command: ./runserver.sh
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    links:
+      - db:db
+      - redis:redis
+      - rabbitmq:rabbitmq
+  worker:
+    build: .
+    command: ./runcelery.sh
+    volumes:
+      - .:/code
+    links:
+      - db:db
+      - rabbitmq:rabbitmq
+      - redis:redis
+  anaconda:
+    image: vader_web
+    ports:
+      - "19360:19360"
+    depends_on:
+      - web
+    entrypoint: ./runanaconda.sh
