@@ -1,0 +1,10 @@
+# PostgreSQL
+POSTGRES_USER=postgresuser
+POSTGRES_PASSWORD=mysecretpassword
+
+# RabbitMQ
+RABBITMQ_DEFAULT_USER=admin
+RABBITMQ_DEFAULT_PASS=mypass
+
+# Django
+DEBUG=True

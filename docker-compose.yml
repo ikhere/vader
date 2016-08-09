@@ -1,14 +1,30 @@
 version: '2'
+
+volumes:
+  postgres_data: {}
+  postgres_backup: {}
+
 services:
   db:
     image: postgres
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_backup:/backups
+
   rabbitmq:
     image: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    env_file: .env
+
   redis:
     image: redis
+
   web:
     build: .
-    command: ./runserver.sh
+    command: bash -c "./runserver.sh"
     volumes:
       - .:/code
     ports:
@@ -17,19 +33,22 @@ services:
       - db:db
       - redis:redis
       - rabbitmq:rabbitmq
+    env_file: .env
+
   worker:
     build: .
-    command: ./runcelery.sh
+    command: bash -c "./runcelery.sh"
     volumes:
       - .:/code
     links:
       - db:db
       - rabbitmq:rabbitmq
       - redis:redis
+
   anaconda:
     image: vader_web
     ports:
       - "19360:19360"
     depends_on:
       - web
-    entrypoint: ./runanaconda.sh
+    entrypoint: /opt/anaconda/anaconda_server/docker/start python 19360 anaconda
