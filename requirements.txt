@@ -2,3 +2,4 @@ django==1.9.8
 celery==3.1.17
 psycopg2==2.6.2
 Djangorestframework==3.4.0
+redis==2.10.5
