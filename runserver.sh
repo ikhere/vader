@@ -2,6 +2,8 @@
 
 export PYTHONPATH=/code:$PYTHONPATH
 
+sleep 10
+
 # Migrate db so we have latest db schema
 su -m vader -c "pyhon manage.py migrate"
 
